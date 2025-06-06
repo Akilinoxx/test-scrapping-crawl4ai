@@ -1,0 +1,18 @@
+services:
+  scraper:
+    build: .
+    volumes:
+      - ./scraped_links:/app/scraped_links
+      - ./sites_example.txt:/app/sites_example.txt
+    environment:
+      - HEADLESS=true
+      - FORMAT=markdown
+      - WAIT_FOR_SELECTOR=body
+      - PAGE_TIMEOUT=60000
+      # Augmenter le délai pour permettre au JavaScript de s'exécuter
+      - DELAY_BEFORE_RETURN=5.0
+      # Utiliser networkidle pour s'assurer que toutes les requêtes sont terminées
+      - WAIT_UNTIL=networkidle
+    # command: ["python", "app.py", "--sites", "https://dentego.fr"]
+    # Pour utiliser un fichier de sites sans limite d'URLs
+    command: ["python", "app.py", "--sites-file", "sites_example.txt"]

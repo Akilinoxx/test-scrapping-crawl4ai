@@ -1,0 +1,6 @@
+Crawl4AI
+requests==2.31.0
+beautifulsoup4==4.12.2
+# lxml est déjà inclus comme dépendance de Crawl4AI (version ~=5.3)
+argparse==1.4.0
+html2text==2020.1.16
