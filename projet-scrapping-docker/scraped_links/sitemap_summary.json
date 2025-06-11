@@ -1,0 +1,46 @@
+{
+  "https://www.volfoni.fr/": {
+    "site_name": "www_volfoni_fr",
+    "url_count": 12
+  },
+  "https://www.mcdonalds.fr/restaurants/mcdonalds-paris-rivoli/34": {
+    "site_name": "www_mcdonalds_fr",
+    "url_count": 44
+  },
+  "https://www.popelini.com/": {
+    "site_name": "www_popelini_com",
+    "url_count": 9
+  },
+  "https://phood.fr/": {
+    "site_name": "phood_fr",
+    "url_count": 1
+  },
+  "https://www.doctolib.fr/centre-dentaire/corbeil-essonnes/centre-dentaire-corbeil-medismile": {
+    "site_name": "www_doctolib_fr",
+    "url_count": 46
+  },
+  "https://www.artdentclinic.fr/": {
+    "site_name": "www_artdentclinic_fr",
+    "url_count": 38
+  },
+  "https://www.bainsdumarais.fr/": {
+    "site_name": "www_bainsdumarais_fr",
+    "url_count": 42
+  },
+  "https://www.aquarestaurant.fr/": {
+    "site_name": "www_aquarestaurant_fr",
+    "url_count": 20
+  },
+  "https://chaletdulac-paris.com/": {
+    "site_name": "chaletdulac-paris_com",
+    "url_count": 61
+  },
+  "https://kani-restaurant.com/": {
+    "site_name": "kani-restaurant_com",
+    "url_count": 1
+  },
+  "https://dentego.fr/": {
+    "site_name": "dentego_fr",
+    "url_count": 585
+  }
+}

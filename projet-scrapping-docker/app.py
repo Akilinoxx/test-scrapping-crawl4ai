@@ -1,11 +1,12 @@
 import os
 import sys
-import os
 import argparse
 import logging
 import time
 import json
-from sitemap_extractor import SitemapExtractor, process_multiple_sites
+import asyncio
+from crawl4ai import AsyncWebCrawler
+from sitemap_extractor_simple import SitemapExtractor
 
 # Configuration du logging
 logging.basicConfig(
@@ -39,8 +40,8 @@ def parse_arguments():
     parser.add_argument('--max-urls', '-m', type=int, default=0,
                         help='Nombre maximum d\'URLs à scraper par site (0 = illimité)')
     
-    # Mode de fonctionnement
-    parser.add_argument('--sitemap-only', action='store_true',
+    # Mode de fonctionnement - toujours en mode sitemap uniquement
+    parser.add_argument('--sitemap-only', action='store_true', default=True,
                         help='Extraire uniquement les URLs des sitemaps sans scraper les pages')
     
     return parser.parse_args()
@@ -98,6 +99,10 @@ def sitemap_only_mode(sites, output_dir, max_workers, delay):
             'url_count': len(urls)
         }
         
+        # Si peu d'URLs ont été trouvées, afficher un avertissement
+        if len(urls) < 3:
+            logger.warning(f"Peu d'URLs trouvées pour {site_url} ({len(urls)}). La méthode avancée avec Crawl4AI a été utilisée.")
+        
         logger.info(f"Extraction terminée pour {site_url}. {len(urls)} URLs trouvées.")
     
     # Sauvegarder un résumé global
@@ -133,26 +138,8 @@ def main():
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     
-    # Exécuter le mode approprié
-    if args.sitemap_only:
-        sitemap_only_mode(sites, args.output_dir, args.max_workers, args.delay)
-    else:
-        # Mode complet: extraction des sitemaps + scraping
-        stats = process_multiple_sites(
-            sites=sites,
-            output_dir=args.output_dir,
-            max_workers=args.max_workers,
-            delay=args.delay,
-            max_urls=args.max_urls
-        )
-        
-        # Afficher un résumé
-        logger.info("Résumé du traitement:")
-        for site_stat in stats:
-            logger.info(f"Site: {site_stat['site_url']}")
-            logger.info(f"  - URLs trouvées: {site_stat['total_urls']}")
-            logger.info(f"  - URLs scrapées: {site_stat['scraped_urls']}")
-            logger.info(f"  - Temps total: {site_stat['total_time']:.2f} secondes")
+    # Toujours exécuter en mode sitemap uniquement
+    sitemap_only_mode(sites, args.output_dir, args.max_workers, args.delay)
 
 if __name__ == "__main__":
     main()
