@@ -308,16 +308,22 @@ class ContentScraper:
         urls_file = os.path.join(site_path, 'sitemap_urls.json')
         
         if not os.path.exists(urls_file):
+            print(f"ERREUR: Fichier {urls_file} non trouvé pour le site {site_dir}")
             return None
         
         try:
+            print(f"Traitement du site: {site_dir}")
             with open(urls_file, 'r', encoding='utf-8') as f:
                 urls = json.load(f)
             
+            print(f"Site {site_dir}: {len(urls)} URLs trouvées")
+            
             # Scraper les URLs du site
             site_results = await self.scrape_site_urls(site_dir, urls)
+            print(f"Terminé pour {site_dir}: {len(site_results)} URLs scrapées")
             return (site_dir, site_results)
-        except Exception:
+        except Exception as e:
+            print(f"ERREUR lors du traitement de {site_dir}: {str(e)}")
             return None
     
     async def scrape_all_sites(self, max_urls_per_site=0):
