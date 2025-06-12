@@ -3,3 +3,6 @@ requests==2.31.0
 beautifulsoup4==4.12.2
 lxml==5.3.0
 argparse==1.4.0
+pinecone-client==2.2.4
+tqdm==4.66.1
+uuid==1.30
