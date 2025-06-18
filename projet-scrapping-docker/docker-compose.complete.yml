@@ -1,0 +1,72 @@
+services:
+  # Service de scraping web
+  scraper:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./scraped_links:/app/scraped_links
+      - ./scraped_content_md:/app/scraped_content_md
+      - ./sites_example.txt:/app/sites_example.txt
+    environment:
+      - HEADLESS=true
+      - FORMAT=markdown
+      - WAIT_FOR_SELECTOR=body
+      - PAGE_TIMEOUT=60000
+      - DELAY_BEFORE_RETURN=5.0
+      - WAIT_UNTIL=networkidle
+    networks:
+      - scraping_network
+    # Décommenter pour scraper des sites spécifiques
+    # command: ["python", "app.py", "--sites", "https://example.com"]
+    # Utiliser un fichier de sites
+    command: ["python", "app.py", "--sites-file", "sites_example.txt"]
+
+  # Service de vectorisation
+  vectorizer:
+    build:
+      context: .
+      dockerfile: Dockerfile.vector
+    volumes:
+      - ./scraped_content_md:/app/scraped_content_md
+    environment:
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-aGqrF2ADcSspcpLPL5YM31lj4AUDPAce}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-pcsk_38hV8j_ArTqGXkzUQfQWxQZKM93aCrDeVseVFcnbsNEdHmDfpZgRVxVQUJ72PEHLufXwv2}
+      - PINECONE_HOST=${PINECONE_HOST:-https://scraped-content-wewx8nz.svc.aped-4627-b74a.pinecone.io}
+    networks:
+      - scraping_network
+    depends_on:
+      - scraper
+    # Attendre que le scraper termine avant de vectoriser
+    command: ["python", "vector_store.py", "--markdown-dir", "/app/scraped_content_md"]
+
+  # Service chatbot
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile.chatbot
+    volumes:
+      - ./scraped_content_md:/app/scraped_content_md
+      - ./conversations:/app/conversations
+    environment:
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-aGqrF2ADcSspcpLPL5YM31lj4AUDPAce}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-pcsk_38hV8j_ArTqGXkzUQfQWxQZKM93aCrDeVseVFcnbsNEdHmDfpZgRVxVQUJ72PEHLufXwv2}
+      - PINECONE_HOST=${PINECONE_HOST:-https://scraped-content-wewx8nz.svc.aped-4627-b74a.pinecone.io}
+    ports:
+      - "8080:8080"
+    networks:
+      - scraping_network
+    depends_on:
+      - vectorizer
+    # Mode interactif pour le chatbot
+    stdin_open: true
+    tty: true
+    command: ["python", "test_chatbot.py"]
+
+networks:
+  scraping_network:
+    driver: bridge
+
+volumes:
+  scraped_data:
+  conversations:

@@ -1,7 +1,7 @@
 {
   "https://www.volfoni.fr/": {
     "site_name": "www_volfoni_fr",
-    "url_count": 12
+    "url_count": 9
   },
   "https://www.mcdonalds.fr/restaurants/mcdonalds-paris-rivoli/34": {
     "site_name": "www_mcdonalds_fr",
@@ -13,7 +13,7 @@
   },
   "https://phood.fr/": {
     "site_name": "phood_fr",
-    "url_count": 1
+    "url_count": 6
   },
   "https://www.doctolib.fr/centre-dentaire/corbeil-essonnes/centre-dentaire-corbeil-medismile": {
     "site_name": "www_doctolib_fr",
@@ -42,5 +42,9 @@
   "https://dentego.fr/": {
     "site_name": "dentego_fr",
     "url_count": 585
+  },
+  "https://www.carrefour.fr/": {
+    "site_name": "www_carrefour_fr",
+    "url_count": 1
   }
 }

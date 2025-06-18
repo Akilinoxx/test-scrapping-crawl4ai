@@ -1,9 +1,10 @@
-# Utiliser une image de base Python 3.10
+# Dockerfile pour le chatbot avec base vectorielle
 FROM python:3.10-slim
 
 # Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
     build-essential \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Définir le répertoire de travail
@@ -16,16 +17,22 @@ COPY requirements_vector.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements_vector.txt
 
-# Copier le script de vectorisation
+# Copier les scripts nécessaires
+COPY chatbot.py .
+COPY test_chatbot.py .
 COPY vector_store.py .
 
 # Créer les répertoires nécessaires
 RUN mkdir -p /app/scraped_content_md
+RUN mkdir -p /app/conversations
 
-# Variables d'environnement pour les clés API
+# Exposer le port si on veut ajouter une interface web plus tard
+EXPOSE 8080
+
+# Variables d'environnement pour les clés API (à surcharger lors du run)
 ENV MISTRAL_API_KEY=""
 ENV PINECONE_API_KEY=""
 ENV PINECONE_HOST=""
 
-# Commande à exécuter au démarrage du conteneur
-ENTRYPOINT ["python", "vector_store.py"]
+# Commande par défaut : lancer le chatbot interactif
+CMD ["python", "chatbot.py"]
