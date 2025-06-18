@@ -3,7 +3,7 @@ services:
   scraper:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     volumes:
       - ./scraped_links:/app/scraped_links
       - ./scraped_content_md:/app/scraped_content_md
@@ -26,7 +26,7 @@ services:
   vectorizer:
     build:
       context: .
-      dockerfile: Dockerfile.vector
+      dockerfile: docker/Dockerfile.vector
     volumes:
       - ./scraped_content_md:/app/scraped_content_md
     environment:
@@ -44,7 +44,7 @@ services:
   chatbot:
     build:
       context: .
-      dockerfile: Dockerfile.chatbot
+      dockerfile: docker/Dockerfile.chatbot
     volumes:
       - ./scraped_content_md:/app/scraped_content_md
       - ./conversations:/app/conversations
@@ -61,7 +61,7 @@ services:
     # Mode interactif pour le chatbot
     stdin_open: true
     tty: true
-    command: ["python", "test_chatbot.py"]
+    command: ["python", "chatbot.py"]
 
 networks:
   scraping_network:

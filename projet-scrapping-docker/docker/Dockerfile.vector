@@ -1,0 +1,31 @@
+# Utiliser une image de base Python 3.10
+FROM python:3.10-slim
+
+# Installer les dépendances système nécessaires
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY requirements_vector.txt .
+
+# Installer les dépendances Python
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements_vector.txt
+
+# Copier le script de vectorisation
+COPY src/vector_store.py .
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /app/scraped_content_md
+
+# Variables d'environnement pour les clés API
+ENV MISTRAL_API_KEY=""
+ENV PINECONE_API_KEY=""
+ENV PINECONE_HOST=""
+
+# Commande à exécuter au démarrage du conteneur
+ENTRYPOINT ["python", "vector_store.py"]

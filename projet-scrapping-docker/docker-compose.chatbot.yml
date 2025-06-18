@@ -1,0 +1,15 @@
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.chatbot
+    volumes:
+      - ./scraped_content_md:/app/scraped_content_md
+      - ./conversations:/app/conversations
+    environment:
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-aGqrF2ADcSspcpLPL5YM31lj4AUDPAce}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-pcsk_38hV8j_ArTqGXkzUQfQWxQZKM93aCrDeVseVFcnbsNEdHmDfpZgRVxVQUJ72PEHLufXwv2}
+      - PINECONE_HOST=${PINECONE_HOST:-https://scraped-content-wewx8nz.svc.aped-4627-b74a.pinecone.io}
+    stdin_open: true
+    tty: true
+    command: ["python", "chatbot.py"]
